@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
         }
 
         rb.MovePosition(GetNextPosition());
+        rb.SetRotation(Quaternion.Euler(DirectionUtils.DirectionToAngle[(Direction)direction]));
     }
 
     private static Direction? GetDirection()

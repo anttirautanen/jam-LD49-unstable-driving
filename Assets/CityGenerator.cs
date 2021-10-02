@@ -9,7 +9,7 @@ public class CityGenerator : MonoBehaviour
     public Transform buildingPrefab;
     public Transform playerCellHighlightPrefab;
     public Transform wormContainer;
-    private const int WormLenght = 6;
+    private const int WormLength = 6;
     private const int CellScale = 3;
     private readonly List<Worm> worms = new List<Worm>();
     private Transform highlightCell;
@@ -22,7 +22,7 @@ public class CityGenerator : MonoBehaviour
 
     private void Update()
     {
-        RenderHighlightedCell();
+        // RenderHighlightedCell();
 
         var isAtTheEndOfAWorm = worms.Any(worm => worm.Cells.Last() == GetPlayerCell());
         if (isAtTheEndOfAWorm)
@@ -40,17 +40,15 @@ public class CityGenerator : MonoBehaviour
     private void RegenerateMap()
     {
         worms.Clear();
-
-        worms.Add(new Worm(GetPlayerCell(), Direction.Up, WormLenght));
-        worms.Add(new Worm(GetPlayerCell(), Direction.Left, WormLenght));
-        worms.Add(new Worm(GetPlayerCell(), Direction.Down, WormLenght));
-        worms.Add(new Worm(GetPlayerCell(), Direction.Right, WormLenght));
+        worms.Add(new Worm(GetPlayerCell(), Direction.Up, WormLength));
+        worms.Add(new Worm(GetPlayerCell(), Direction.Left, WormLength));
+        worms.Add(new Worm(GetPlayerCell(), Direction.Down, WormLength));
+        worms.Add(new Worm(GetPlayerCell(), Direction.Right, WormLength));
     }
 
     private void RenderWorms()
     {
-
-        for (var i = 0; i< wormContainer.childCount; ++i)
+        for (var i = 0; i < wormContainer.childCount; ++i)
         {
             Destroy(wormContainer.GetChild(i).gameObject);
         }
@@ -63,6 +61,25 @@ public class CityGenerator : MonoBehaviour
                 Quaternion.identity,
                 wormContainer
             );
+        }
+
+        var wormCells = worms.Aggregate(new List<Vector2Int>(),
+            (wormCells, worm) => wormCells.Concat(worm.Cells).ToList());
+        for (var x = -10; x <= 10; ++x)
+        {
+            for (var y = -10; y <= 10; ++y)
+            {
+                var cell = new Vector2Int(x, y);
+                if (!wormCells.Contains(cell))
+                {
+                    Instantiate(
+                        buildingPrefab,
+                        CellToWorldCenterPosition(cell),
+                        Quaternion.identity,
+                        wormContainer
+                    );
+                }
+            }
         }
     }
 

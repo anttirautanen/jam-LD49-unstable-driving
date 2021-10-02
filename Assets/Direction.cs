@@ -32,4 +32,12 @@ public static class DirectionUtils
                 return false;
         }
     }
+
+    public static Dictionary<Direction, Vector3Int> DirectionToAngle { get; } = new Dictionary<Direction, Vector3Int>
+    {
+        { Direction.Up, new Vector3Int(0, 0, 0) },
+        { Direction.Left, new Vector3Int(0, 0, 90) },
+        { Direction.Down, new Vector3Int(0, 0, 180) },
+        { Direction.Right, new Vector3Int(0, 0, 270) }
+    };
 }

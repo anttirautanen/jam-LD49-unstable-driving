@@ -6,9 +6,8 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     [Range(0f, 100f)] public float speed = 10f;
-    private Direction direction = Direction.Up;
+    private Direction? direction = null;
     private Rigidbody2D rb;
-    private bool isMoving = false;
 
     private void Start()
     {
@@ -17,20 +16,20 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            isMoving = !isMoving;
-        }
-
-        if (!isMoving)
-        {
-            return;
-        }
-
         var nextDirection = GetDirection();
         if (nextDirection != null)
         {
             direction = (Direction)nextDirection;
+        }
+
+        Move(direction);
+    }
+
+    private void Move(Direction? direction)
+    {
+        if (direction == null)
+        {
+            return;
         }
 
         rb.MovePosition(GetNextPosition());
@@ -38,22 +37,22 @@ public class PlayerController : MonoBehaviour
 
     private static Direction? GetDirection()
     {
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetAxisRaw("Vertical") > 0)
         {
             return Direction.Up;
         }
 
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetAxisRaw("Horizontal") < 0)
         {
             return Direction.Left;
         }
 
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetAxisRaw("Vertical") < 0)
         {
             return Direction.Down;
         }
 
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetAxisRaw("Horizontal") > 0)
         {
             return Direction.Right;
         }

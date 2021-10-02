@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class CityGenerator : MonoBehaviour
 {
-    public PlayerController player;
     public Transform roadPrefab;
     public Transform buildingPrefab;
     public Transform playerCellHighlightPrefab;
     public Transform diamondPrefab;
-    public Transform wormContainer;
     private const int WormLength = 6;
     private const int CellScale = 3;
     private readonly List<Worm> worms = new List<Worm>();
@@ -17,6 +15,7 @@ public class CityGenerator : MonoBehaviour
 
     private void Start()
     {
+        PlayerController.OnDiamondCollected += OnRegenerateMap;
         RegenerateMap();
         RenderWorms();
     }
@@ -24,18 +23,17 @@ public class CityGenerator : MonoBehaviour
     private void Update()
     {
         // RenderHighlightedCell();
-
-        var isAtTheEndOfAWorm = worms.Any(worm => worm.Cells.Last() == GetPlayerCell());
-        if (isAtTheEndOfAWorm)
-        {
-            RegenerateMap();
-            RenderWorms();
-        }
     }
 
-    private Vector2Int GetPlayerCell()
+    private void OnRegenerateMap(int _)
     {
-        return WorldCenterPositionToCell(player.transform.position);
+        RegenerateMap();
+        RenderWorms();
+    }
+
+    private static Vector2Int GetPlayerCell()
+    {
+        return WorldCenterPositionToCell(FindObjectOfType<PlayerController>().transform.position);
     }
 
     private void RegenerateMap()
@@ -49,6 +47,7 @@ public class CityGenerator : MonoBehaviour
 
     private void RenderWorms()
     {
+        var wormContainer = GameObject.Find("WormContainer").transform;
         for (var i = 0; i < wormContainer.childCount; ++i)
         {
             Destroy(wormContainer.GetChild(i).gameObject);

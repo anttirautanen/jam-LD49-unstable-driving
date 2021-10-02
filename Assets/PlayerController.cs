@@ -5,7 +5,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public static event Action StartMoving;
-    public static event Action OnCollided;
+    public static event Action OnCollidedWithBuilding;
+    public static event Action<int> OnDiamondCollected;
 
     [Range(0f, 100f)] public float speed = 10f;
     private Direction? direction = null;
@@ -90,7 +91,15 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Building"))
         {
-            OnCollided?.Invoke();
+            OnCollidedWithBuilding?.Invoke();
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Diamond"))
+        {
+            OnDiamondCollected?.Invoke(other.GetComponent<Diamond>().points);
         }
     }
 }

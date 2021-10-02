@@ -1,23 +1,25 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Debug = System.Diagnostics.Debug;
 
 public class GameController : MonoBehaviour
 {
     public TMP_Text timeText;
     public RectTransform startViewPrefab;
     public RectTransform endViewPrefab;
+    public static bool IsRunning = false;
     private float? startTime;
     private RectTransform startView;
-    public static bool IsRunning = false;
+    private int extraPoints;
 
     private void Start()
     {
         PlayerController.StartMoving += OnStartMoving;
-        PlayerController.OnCollided += OnCollision;
+        PlayerController.OnCollidedWithBuilding += OnCollision;
+        PlayerController.OnDiamondCollected += OnDiamondHit;
         EndView.OnRestart += OnRestart;
 
+        extraPoints = 0;
         startView = Instantiate(startViewPrefab, FindObjectOfType<Canvas>().transform);
     }
 
@@ -34,17 +36,21 @@ public class GameController : MonoBehaviour
 
     private void OnCollision()
     {
-        Debug.Assert(startTime != null, nameof(startTime) + " != null");
+        if (IsRunning)
+        {
+            IsRunning = false;
+            timeText.text = "";
 
-        var score = (float)(Time.time - startTime);
+            var endViewGo = Instantiate(endViewPrefab, FindObjectOfType<Canvas>().transform);
+            endViewGo.GetComponent<EndView>().Init(GetScore());
 
-        IsRunning = false;
-        timeText.text = "";
+            startTime = null;
+        }
+    }
 
-        var endViewGo = Instantiate(endViewPrefab, FindObjectOfType<Canvas>().transform);
-        endViewGo.GetComponent<EndView>().Init(score);
-
-        startTime = null;
+    private void OnDiamondHit(int points)
+    {
+        extraPoints += points;
     }
 
     private static void OnRestart()
@@ -56,10 +62,18 @@ public class GameController : MonoBehaviour
     {
         if (IsRunning)
         {
-            Debug.Assert(startTime != null, nameof(startTime) + " != null");
-
-            var elapsedTime = (float)(Time.time - startTime);
-            timeText.text = elapsedTime.ToString("0.0");
+            timeText.text = GetScore().ToString();
         }
+    }
+
+    private int GetScore()
+    {
+        if (startTime == null)
+        {
+            return 0;
+        }
+
+        var elapsedTime = (float)(Time.time - startTime);
+        return Mathf.FloorToInt(elapsedTime * 10) + extraPoints;
     }
 }

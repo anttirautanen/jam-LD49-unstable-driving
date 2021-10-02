@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     [Range(0f, 100f)] public float speed = 10f;
     private Direction direction = Direction.Up;
     private Rigidbody2D rb;
+    private bool isMoving = false;
 
     private void Start()
     {
@@ -16,6 +17,16 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            isMoving = !isMoving;
+        }
+
+        if (!isMoving)
+        {
+            return;
+        }
+
         var nextDirection = GetDirection();
         if (nextDirection != null)
         {

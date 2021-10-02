@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CityGenerator : MonoBehaviour
@@ -5,46 +7,90 @@ public class CityGenerator : MonoBehaviour
     public PlayerController player;
     public Transform roadPrefab;
     public Transform buildingPrefab;
-    private const int GridSize = 5;
+    public Transform playerCellHighlightPrefab;
+    public Transform wormContainer;
+    private const int WormLenght = 6;
     private const int CellScale = 3;
-    private CityTile[] grid;
+    private readonly List<Worm> worms = new List<Worm>();
+    private Transform highlightCell;
 
     private void Start()
     {
-        GenerateBuildings();
-        RenderCity();
+        RegenerateMap();
+        RenderWorms();
     }
 
     private void Update()
     {
-        // print("current player cell: " + GetPlayerCell());
-    }
+        RenderHighlightedCell();
 
-    private Vector2 GetPlayerCell()
-    {
-        var playerPosition = player.transform.position;
-        return new Vector2(Mathf.Floor(playerPosition.x), Mathf.Floor(playerPosition.y));
-    }
-
-    private void GenerateBuildings()
-    {
-        grid = new CityTile[GridSize * GridSize];
-        for (var i = 0; i < grid.Length; ++i)
+        var isAtTheEndOfAWorm = worms.Any(worm => worm.Cells.Last() == GetPlayerCell());
+        if (isAtTheEndOfAWorm)
         {
-            grid[i] = Random.value > 0.9 ? CityTile.Building : CityTile.Road;
+            RegenerateMap();
+            RenderWorms();
         }
     }
 
-    private void RenderCity()
+    private Vector2Int GetPlayerCell()
     {
-        for (var x = 0; x < GridSize; ++x)
+        return WorldCenterPositionToCell(player.transform.position);
+    }
+
+    private void RegenerateMap()
+    {
+        worms.Clear();
+
+        worms.Add(new Worm(GetPlayerCell(), Direction.Up, WormLenght));
+        worms.Add(new Worm(GetPlayerCell(), Direction.Left, WormLenght));
+        worms.Add(new Worm(GetPlayerCell(), Direction.Down, WormLenght));
+        worms.Add(new Worm(GetPlayerCell(), Direction.Right, WormLenght));
+    }
+
+    private void RenderWorms()
+    {
+
+        for (var i = 0; i< wormContainer.childCount; ++i)
         {
-            for (var y = 0; y < GridSize; ++y)
-            {
-                var cell = GetPlayerCell() + new Vector2(x * CellScale - 2, y * CellScale - 2);
-                var prefab = grid[x * GridSize + y] == CityTile.Road ? roadPrefab : buildingPrefab;
-                Instantiate(prefab, cell, Quaternion.identity, transform);
-            }
+            Destroy(wormContainer.GetChild(i).gameObject);
         }
+
+        foreach (var wormCell in worms.SelectMany(worm => worm.Cells))
+        {
+            Instantiate(
+                roadPrefab,
+                CellToWorldCenterPosition(wormCell),
+                Quaternion.identity,
+                wormContainer
+            );
+        }
+    }
+
+    private void RenderHighlightedCell()
+    {
+        if (highlightCell)
+        {
+            Destroy(highlightCell.gameObject);
+        }
+
+        highlightCell = Instantiate(
+            playerCellHighlightPrefab,
+            CellToWorldCenterPosition(GetPlayerCell()),
+            Quaternion.identity,
+            transform
+        );
+    }
+
+    private static Vector3 CellToWorldCenterPosition(Vector2Int cell)
+    {
+        return new Vector3(cell.x * CellScale, cell.y * CellScale, 0) + new Vector3(1.5f, 1.5f, 0);
+    }
+
+    private static Vector2Int WorldCenterPositionToCell(Vector3 worldCenterPosition)
+    {
+        return new Vector2Int(
+            Mathf.FloorToInt(worldCenterPosition.x / CellScale),
+            Mathf.FloorToInt(worldCenterPosition.y / CellScale)
+        );
     }
 }

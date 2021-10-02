@@ -153,6 +153,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeText: {fileID: 774910460}
+  canvas: {fileID: 2088927976}
+  endViewPrefab: {fileID: 2533997510868001870, guid: 54f3091f8cc3b4a29ba01a29aee506fa, type: 3}
 --- !u!4 &286571646
 Transform:
   m_ObjectHideFlags: 0

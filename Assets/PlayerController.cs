@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
 
     private void Move(Direction? direction)
     {
-        if (direction == null)
+        if (direction == null || !GameController.IsRunning)
         {
             return;
         }

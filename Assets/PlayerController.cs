@@ -29,7 +29,10 @@ public class PlayerController : MonoBehaviour
         {
             direction = (Direction)nextDirection;
         }
+    }
 
+    private void FixedUpdate()
+    {
         Move(direction);
     }
 
@@ -74,10 +77,10 @@ public class PlayerController : MonoBehaviour
         var currentPosition = transform.position;
         return direction switch
         {
-            Direction.Up => currentPosition + Vector3.up * speed * Time.deltaTime,
-            Direction.Left => currentPosition + Vector3.left * speed * Time.deltaTime,
-            Direction.Down => currentPosition + Vector3.down * speed * Time.deltaTime,
-            Direction.Right => currentPosition + Vector3.right * speed * Time.deltaTime,
+            Direction.Up => currentPosition + Vector3.up * speed * Time.fixedDeltaTime,
+            Direction.Left => currentPosition + Vector3.left * speed * Time.fixedDeltaTime,
+            Direction.Down => currentPosition + Vector3.down * speed * Time.fixedDeltaTime,
+            Direction.Right => currentPosition + Vector3.right * speed * Time.fixedDeltaTime,
             _ => throw new Exception("Unknown direction " + direction)
         };
     }

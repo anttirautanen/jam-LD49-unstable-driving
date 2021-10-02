@@ -1,10 +1,12 @@
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
+    public static event Action StartMoving;
+    public static event Action OnCollided;
+
     [Range(0f, 100f)] public float speed = 10f;
     private Direction? direction = null;
     private Rigidbody2D rb;
@@ -17,6 +19,12 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         var nextDirection = GetDirection();
+
+        if (direction == null && nextDirection != null)
+        {
+            StartMoving?.Invoke();
+        }
+
         if (nextDirection != null)
         {
             direction = (Direction)nextDirection;
@@ -78,8 +86,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Building"))
         {
-            print("COLLIDED WITH A BUILDING - GAME OVER!");
-            SceneManager.LoadScene(0);
+            OnCollided?.Invoke();
         }
     }
 }

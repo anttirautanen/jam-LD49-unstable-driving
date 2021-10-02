@@ -65,11 +65,12 @@ public class CityGenerator : MonoBehaviour
 
         var wormCells = worms.Aggregate(new List<Vector2Int>(),
             (wormCells, worm) => wormCells.Concat(worm.Cells).ToList());
+        var playerCell = GetPlayerCell();
         for (var x = -10; x <= 10; ++x)
         {
             for (var y = -10; y <= 10; ++y)
             {
-                var cell = new Vector2Int(x, y);
+                var cell = new Vector2Int(playerCell.x + x, playerCell.y + y);
                 if (!wormCells.Contains(cell))
                 {
                     Instantiate(

@@ -543,7 +543,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.01, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -554,7 +554,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.51, y: 0.81}
+  m_Size: {x: 0.5, y: 0.8}
   m_EdgeRadius: 0
 --- !u!50 &812317383
 Rigidbody2D:
@@ -610,6 +610,7 @@ MonoBehaviour:
   roadPrefab: {fileID: 8677133089281731072, guid: b3a1cba584939445fac10c74c59b53df, type: 3}
   buildingPrefab: {fileID: 4406285245969651778, guid: 55597dcd879404a02886137157e44582, type: 3}
   playerCellHighlightPrefab: {fileID: 4406285245969651778, guid: 9efe23cc15c1645b4864ed7a1848b273, type: 3}
+  diamondPrefab: {fileID: 3437636218014349141, guid: 3343a680246ef4086b1474cabd5d82a1, type: 3}
   wormContainer: {fileID: 2012352161}
 --- !u!4 &904350415
 Transform:
@@ -873,8 +874,8 @@ Canvas:
   m_GameObject: {fileID: 2088927973}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 519420031}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1

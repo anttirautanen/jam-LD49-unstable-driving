@@ -8,6 +8,7 @@ public class CityGenerator : MonoBehaviour
     public Transform roadPrefab;
     public Transform buildingPrefab;
     public Transform playerCellHighlightPrefab;
+    public Transform diamondPrefab;
     public Transform wormContainer;
     private const int WormLength = 6;
     private const int CellScale = 3;
@@ -53,14 +54,29 @@ public class CityGenerator : MonoBehaviour
             Destroy(wormContainer.GetChild(i).gameObject);
         }
 
-        foreach (var wormCell in worms.SelectMany(worm => worm.Cells))
+        foreach (var worm in worms)
         {
-            Instantiate(
-                roadPrefab,
-                CellToWorldCenterPosition(wormCell),
-                Quaternion.identity,
-                wormContainer
-            );
+            for (var i = 0; i < worm.Cells.Count; ++i)
+            {
+                var isLastCell = i == worm.Cells.Count - 1;
+                if (isLastCell)
+                {
+                    var diamondGo = Instantiate(
+                        diamondPrefab,
+                        CellToWorldCenterPosition(worm.Cells[i]),
+                        Quaternion.identity,
+                        wormContainer
+                    );
+                    diamondGo.GetComponent<Diamond>().Init(200);
+                }
+
+                Instantiate(
+                    roadPrefab,
+                    CellToWorldCenterPosition(worm.Cells[i]),
+                    Quaternion.identity,
+                    wormContainer
+                );
+            }
         }
 
         var wormCells = worms.Aggregate(new List<Vector2Int>(),

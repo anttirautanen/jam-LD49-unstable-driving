@@ -6,8 +6,10 @@ using Debug = System.Diagnostics.Debug;
 public class GameController : MonoBehaviour
 {
     public TMP_Text timeText;
+    public RectTransform startViewPrefab;
     public RectTransform endViewPrefab;
     private float? startTime;
+    private RectTransform startView;
     public static bool IsRunning = false;
 
     private void Start()
@@ -15,10 +17,17 @@ public class GameController : MonoBehaviour
         PlayerController.StartMoving += OnStartMoving;
         PlayerController.OnCollided += OnCollision;
         EndView.OnRestart += OnRestart;
+
+        startView = Instantiate(startViewPrefab, FindObjectOfType<Canvas>().transform);
     }
 
     private void OnStartMoving()
     {
+        if (startView)
+        {
+            Destroy(startView.gameObject);
+        }
+
         startTime = Time.time;
         IsRunning = true;
     }

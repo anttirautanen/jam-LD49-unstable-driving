@@ -20,16 +20,17 @@ public class PlayerController : MonoBehaviour
     {
         var nextDirection = GetDirection();
 
-        if (direction == null && nextDirection != null)
-        {
-            StartMoving?.Invoke();
-        }
-
         if (nextDirection != null)
         {
+            if (direction == null)
+            {
+                StartMoving?.Invoke();
+            }
+
             direction = (Direction)nextDirection;
         }
     }
+
 
     private void FixedUpdate()
     {

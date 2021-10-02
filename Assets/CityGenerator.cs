@@ -53,6 +53,7 @@ public class CityGenerator : MonoBehaviour
             Destroy(wormContainer.GetChild(i).gameObject);
         }
 
+        var diamondOrder = new Stack<int>(worms.Select((worm, index) => (index + 1) * 100).OrderBy(_ => Random.value));
         foreach (var worm in worms)
         {
             for (var i = 0; i < worm.Cells.Count; ++i)
@@ -66,7 +67,7 @@ public class CityGenerator : MonoBehaviour
                         Quaternion.identity,
                         wormContainer
                     );
-                    diamondGo.GetComponent<Diamond>().Init(200);
+                    diamondGo.GetComponent<Diamond>().Init(diamondOrder.Pop());
                 }
 
                 Instantiate(

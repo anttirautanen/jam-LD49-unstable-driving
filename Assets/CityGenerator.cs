@@ -8,7 +8,7 @@ public class CityGenerator : MonoBehaviour
     public Transform buildingPrefab;
     public Transform playerCellHighlightPrefab;
     public Transform diamondPrefab;
-    private const int WormLength = 6;
+    private const int WormLength = 10;
     private const int CellScale = 3;
     private readonly List<Worm> worms = new List<Worm>();
     private Transform highlightCell;

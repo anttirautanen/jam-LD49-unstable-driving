@@ -1,9 +1,18 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
+    [Range(0f, 100f)] public float speed = 10f;
     private Direction direction = Direction.Up;
+    private Rigidbody2D rb;
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
 
     private void Update()
     {
@@ -13,7 +22,7 @@ public class PlayerController : MonoBehaviour
             direction = (Direction)nextDirection;
         }
 
-        transform.position = GetNextPosition();
+        rb.MovePosition(GetNextPosition());
     }
 
     private static Direction? GetDirection()
@@ -46,11 +55,20 @@ public class PlayerController : MonoBehaviour
         var currentPosition = transform.position;
         return direction switch
         {
-            Direction.Up => currentPosition + Vector3.up * Time.deltaTime,
-            Direction.Left => currentPosition + Vector3.left * Time.deltaTime,
-            Direction.Down => currentPosition + Vector3.down * Time.deltaTime,
-            Direction.Right => currentPosition + Vector3.right * Time.deltaTime,
+            Direction.Up => currentPosition + Vector3.up * speed * Time.deltaTime,
+            Direction.Left => currentPosition + Vector3.left * speed * Time.deltaTime,
+            Direction.Down => currentPosition + Vector3.down * speed * Time.deltaTime,
+            Direction.Right => currentPosition + Vector3.right * speed * Time.deltaTime,
             _ => throw new Exception("Unknown direction " + direction)
         };
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Building"))
+        {
+            print("COLLIDED WITH A BUILDING - GAME OVER!");
+            SceneManager.LoadScene(0);
+        }
     }
 }

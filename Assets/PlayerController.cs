@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
@@ -95,18 +96,21 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.CompareTag("Building"))
+        if (other.gameObject.CompareTag("Building") && GameController.IsRunning)
         {
             OnCollidedWithBuilding?.Invoke();
             crashAudio.Play();
             engineAudio.Stop();
             engineStartAudio.Stop();
+            const int baseForce = 15;
+            rb.AddForce(new Vector2(Random.value * baseForce + baseForce, Random.value * baseForce + baseForce));
+            rb.AddTorque(Random.value * baseForce + baseForce);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Diamond"))
+        if (other.gameObject.CompareTag("Diamond") && GameController.IsRunning)
         {
             OnDiamondCollected?.Invoke(other.GetComponent<Diamond>().points);
             coinAudio.Play();

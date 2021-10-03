@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     [Range(0f, 100f)] public float speed = 10f;
     public AudioSource coinAudio;
     public AudioSource crashAudio;
+    public AudioSource engineAudio;
     private Direction? direction = null;
     private Rigidbody2D rb;
 
@@ -28,6 +29,7 @@ public class PlayerController : MonoBehaviour
             if (direction == null)
             {
                 StartMoving?.Invoke();
+                engineAudio.Play();
             }
 
             direction = (Direction)nextDirection;
@@ -95,6 +97,7 @@ public class PlayerController : MonoBehaviour
         {
             OnCollidedWithBuilding?.Invoke();
             crashAudio.Play();
+            engineAudio.Stop();
         }
     }
 

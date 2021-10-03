@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -14,6 +15,7 @@ public class PlayerController : MonoBehaviour
     public AudioSource crashAudio;
     public AudioSource engineAudio;
     public AudioSource engineStartAudio;
+    public Transform cloud;
     private Direction? direction = null;
     private Rigidbody2D rb;
 
@@ -102,10 +104,20 @@ public class PlayerController : MonoBehaviour
             crashAudio.Play();
             engineAudio.Stop();
             engineStartAudio.Stop();
+            StartCoroutine(nameof(ProduceSmoke));
             const int baseForce = 15;
             rb.AddForce(new Vector2(Random.value * baseForce + baseForce, Random.value * baseForce + baseForce));
             rb.AddTorque(Random.value * baseForce + baseForce);
         }
+    }
+
+    private IEnumerator ProduceSmoke()
+    {
+        Instantiate(cloud, transform.position, Quaternion.identity);
+        yield return new WaitForSeconds(0.2f);
+        Instantiate(cloud, transform.position, Quaternion.identity);
+        yield return new WaitForSeconds(0.2f);
+        Instantiate(cloud, transform.position, Quaternion.identity);
     }
 
     private void OnTriggerEnter2D(Collider2D other)

@@ -522,6 +522,7 @@ MonoBehaviour:
   crashAudio: {fileID: 812317385}
   engineAudio: {fileID: 812317386}
   engineStartAudio: {fileID: 812317387}
+  cloud: {fileID: 8457726865906912666, guid: ca205f29dece04308ba983ababfcfd35, type: 3}
 --- !u!4 &812317381
 Transform:
   m_ObjectHideFlags: 0

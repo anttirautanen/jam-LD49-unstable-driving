@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
 
     [Range(0f, 100f)] public float speed = 10f;
     public AudioSource coinAudio;
+    public AudioSource crashAudio;
     private Direction? direction = null;
     private Rigidbody2D rb;
 
@@ -93,6 +94,7 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Building"))
         {
             OnCollidedWithBuilding?.Invoke();
+            crashAudio.Play();
         }
     }
 

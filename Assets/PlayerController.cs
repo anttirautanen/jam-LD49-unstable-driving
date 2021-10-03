@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     public AudioSource coinAudio;
     public AudioSource crashAudio;
     public AudioSource engineAudio;
+    public AudioSource engineStartAudio;
     private Direction? direction = null;
     private Rigidbody2D rb;
 
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour
             {
                 StartMoving?.Invoke();
                 engineAudio.Play();
+                engineStartAudio.Play();
             }
 
             direction = (Direction)nextDirection;
@@ -98,6 +100,7 @@ public class PlayerController : MonoBehaviour
             OnCollidedWithBuilding?.Invoke();
             crashAudio.Play();
             engineAudio.Stop();
+            engineStartAudio.Stop();
         }
     }
 

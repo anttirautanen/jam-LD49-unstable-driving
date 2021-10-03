@@ -19,7 +19,6 @@ public class GameController : MonoBehaviour
         PlayerController.OnDiamondCollected += OnDiamondHit;
         EndView.OnRestart += OnRestart;
 
-        extraPoints = 0;
         startView = Instantiate(startViewPrefab, FindObjectOfType<Canvas>().transform);
     }
 
@@ -30,6 +29,7 @@ public class GameController : MonoBehaviour
             Destroy(startView.gameObject);
         }
 
+        extraPoints = 0;
         startTime = Time.time;
         IsRunning = true;
     }

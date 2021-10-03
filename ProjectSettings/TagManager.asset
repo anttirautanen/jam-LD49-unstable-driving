@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Building
   - Diamond
+  - BackgroundAudio
   layers:
   - Default
   - TransparentFX

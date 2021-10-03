@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public static event Action<int> OnDiamondCollected;
 
     [Range(0f, 100f)] public float speed = 10f;
+    public AudioSource coinAudio;
     private Direction? direction = null;
     private Rigidbody2D rb;
 
@@ -100,6 +101,7 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Diamond"))
         {
             OnDiamondCollected?.Invoke(other.GetComponent<Diamond>().points);
+            coinAudio.Play();
         }
     }
 }
